@@ -1,10 +1,11 @@
-import CommitDateInput, { Preset } from './git-date-input';
+import CommitDateInput from './git-date-input';
 import TimezoneInput from './timezone-input';
 import {
     StartMessage,
     EndMessage,
     StartRequestMessage,
 } from '../types/messages';
+import getPresets from './presets';
 
 customElements.define('timezone-input', TimezoneInput);
 customElements.define('git-date-input', CommitDateInput);
@@ -19,36 +20,6 @@ let submitButton: HTMLButtonElement;
 let authorDateInput: CommitDateInput;
 let commitDateInput: CommitDateInput;
 let data: StartMessage;
-
-function getPresets() {
-    let presets: Preset[] = [];
-
-    presets.push({
-        label: 'Now',
-        value: () => CommitDateInput.now(),
-    });
-
-    if (data.hasHead && data.headAuthorDate === data.headCommitDate) {
-        presets.push({
-            label: 'HEAD Date',
-            tooltip: 'HEAD Author and Commit Date',
-            value: data.headAuthorDate,
-        });
-    } else if (data.hasHead) {
-        presets.push(
-            {
-                label: 'HEAD Author Date',
-                value: data.headAuthorDate,
-            },
-            {
-                label: 'HEAD Commit Date',
-                value: data.headCommitDate,
-            },
-        );
-    }
-
-    return presets;
-}
 
 window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     data = e.data;
@@ -76,9 +47,13 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
 
         let amend = amendCheck.checked;
 
-        authorDateInput.default = amend ? data.headAuthorDate : undefined;
+        authorDateInput.default = amend ? data.headDates.author : undefined;
         commitDateInput.default = undefined;
         submitButton.textContent = amend ? 'Amend' : 'Commit';
+
+        const presets = getPresets(data, amendCheck.checked);
+        authorDateInput.presets = presets;
+        commitDateInput.presets = presets;
     });
 
     if (data.isRebase || !data.hasHead) {
@@ -86,18 +61,16 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     }
 
     if (data.isRebase) {
-        authorDateInput.default = data.headAuthorDate;
+        authorDateInput.default = data.rebaseADisNow
+            ? undefined
+            : data.rebaseHeadDates.author;
         commitDateInput.default = data.rebaseCDisAD
-            ? data.headAuthorDate
+            ? data.rebaseHeadDates.author
             : undefined;
         submitButton.textContent = 'Continue';
     }
 
-    if (data.isRebase && !data.rebaseCDisAD) {
-        document.getElementById('rebase-warning')!.style.display = 'block';
-    }
-
-    const presets = getPresets();
+    const presets = getPresets(data, false);
     authorDateInput.presets = presets;
     commitDateInput.presets = presets;
 });

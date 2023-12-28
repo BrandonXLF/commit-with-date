@@ -17,12 +17,28 @@ function execRepoCmd(repo: git.Repository, cmd: string) {
     });
 }
 
-async function isCommitDateAuthorDate(repo: git.Repository) {
+async function getDates(repo: git.Repository, hash: string) {
+    const out = await execRepoCmd(
+        repo,
+        `git show -s --format="%aI %cI" ${hash}`,
+    );
+
+    if (!out) return;
+
+    const parts = out.trim().split(' ');
+
+    return {
+        author: parts[0],
+        commit: parts[1],
+    };
+}
+
+async function getRMFlag(repo: git.Repository, flag: string) {
     const flagUri = vscode.Uri.joinPath(
         repo.rootUri,
         '.git',
         'rebase-merge',
-        'cdate_is_adate',
+        flag,
     );
 
     try {
@@ -34,25 +50,29 @@ async function isCommitDateAuthorDate(repo: git.Repository) {
 }
 
 async function getStartMessage(repo: git.Repository) {
+    const mergeDates = await getDates(repo, 'MERGE_HEAD');
+
     const hasHead = !!repo.state.HEAD?.commit;
     const isRebase = !!repo.state.rebaseCommit;
+    const isMerge = !!mergeDates;
 
     return {
         hasHead,
-        headAuthorDate: hasHead
-            ? await execRepoCmd(
-                  repo,
-                  `git show -s --format="%aI" ${repo.state.HEAD.commit}`,
-              )
-            : undefined,
-        headCommitDate: hasHead
-            ? await execRepoCmd(
-                  repo,
-                  `git show -s --format="%cI" ${repo.state.HEAD.commit}`,
-              )
+        headDates: hasHead
+            ? await getDates(repo, repo.state.HEAD.commit)
             : undefined,
         isRebase,
-        rebaseCDisAD: isRebase ? await isCommitDateAuthorDate(repo) : undefined,
+        rebaseHeadDates: isRebase
+            ? await getDates(repo, repo.state.rebaseCommit.hash)
+            : undefined,
+        rebaseADisNow: isRebase
+            ? await getRMFlag(repo, 'ignore_date')
+            : undefined,
+        rebaseCDisAD: isRebase
+            ? await getRMFlag(repo, 'cdate_is_adate')
+            : undefined,
+        isMerge,
+        mergeHeadDates: isMerge ? mergeDates : undefined,
     } as StartMessage;
 }
 
@@ -109,10 +129,6 @@ async function performCommitWithDate(
 					</div>
 					<git-date-input id="author" label="Author Date"></git-date-input>
                     <git-date-input id="commit" label="Commit Date"></git-date-input>
-					<div id="rebase-warning">
-						WARNING: The commit date will be updated for all subsequent commits
-                        unless <code>--committer-date-is-author-date</code> is used.
-					</div>
 					<div>
 						<button id="submit">Commit</button>
 					</div>
