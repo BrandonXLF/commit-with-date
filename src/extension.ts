@@ -53,8 +53,8 @@ async function getStartMessage(repo: git.Repository) {
     const mergeDates = await getDates(repo, 'MERGE_HEAD');
 
     const hasHead = !!repo.state.HEAD?.commit;
-    const isRebase = !!repo.state.rebaseCommit;
-    const isMerge = !!mergeDates;
+    const isRebase = hasHead && !!repo.state.rebaseCommit;
+    const isMerge = hasHead && !!mergeDates;
 
     return {
         hasHead,
@@ -70,6 +70,12 @@ async function getStartMessage(repo: git.Repository) {
             : undefined,
         rebaseCDisAD: isRebase
             ? await getRMFlag(repo, 'cdate_is_adate')
+            : undefined,
+        rebaseRebaseHeadIsHead: isRebase
+            ? repo.state.HEAD.commit === repo.state.rebaseCommit.hash
+            : undefined,
+        rebaseHasChanges: isRebase
+            ? !!repo.state.indexChanges.length
             : undefined,
         isMerge,
         mergeHeadDates: isMerge ? mergeDates : undefined,

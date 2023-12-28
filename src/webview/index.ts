@@ -63,12 +63,15 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     }
 
     if (data.isRebase) {
-        authorDateInput.initialValue = data.rebaseADisNow
+        const defaultCommitDate = data.rebaseHasChanges
             ? undefined
+            : data.rebaseHeadDates.commit;
+        authorDateInput.initialValue = data.rebaseADisNow
+            ? defaultCommitDate
             : data.rebaseHeadDates.author;
         commitDateInput.initialValue = data.rebaseCDisAD
             ? data.rebaseHeadDates.author
-            : undefined;
+            : defaultCommitDate;
         submitButton.textContent = 'Continue';
     }
 

@@ -11,6 +11,7 @@ export default function getPresets(data: StartMessage, amend: boolean) {
 
     if (
         data.isRebase &&
+        !data.rebaseRebaseHeadIsHead &&
         data.rebaseHeadDates.author === data.rebaseHeadDates.commit
     ) {
         presets.push({
@@ -18,7 +19,7 @@ export default function getPresets(data: StartMessage, amend: boolean) {
             tooltip: `Author and commit date for the commit being applied to HEAD`,
             value: data.rebaseHeadDates.author,
         });
-    } else if (data.isRebase) {
+    } else if (data.isRebase && !data.rebaseRebaseHeadIsHead) {
         presets.push(
             {
                 label: `Former Author Date`,

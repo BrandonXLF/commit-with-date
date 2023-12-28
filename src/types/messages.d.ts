@@ -18,6 +18,8 @@ type IsRebase = {
     rebaseHeadDates: Dates;
     rebaseADisNow: boolean;
     rebaseCDisAD: boolean;
+    rebaseRebaseHeadIsHead: boolean;
+    rebaseHasChanges: boolean;
 };
 
 type IsNotRebase = {
@@ -25,6 +27,8 @@ type IsNotRebase = {
     rebaseHeadDates: undefined;
     rebaseADisNow: undefined;
     rebaseCDisAD: undefined;
+    rebaseRebaseHeadIsHead: undefined;
+    rebaseHasChanges: undefined;
 };
 
 type IsMerge = {
