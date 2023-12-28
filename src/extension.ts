@@ -3,6 +3,7 @@ import * as git from './types/git';
 import { exec } from 'child_process';
 import * as fs from 'fs';
 import { StartMessage, WebviewMessage } from './types/messages';
+import path from 'path';
 
 function execRepoCmd(repo: git.Repository, cmd: string) {
     return new Promise<string>((resolve) => {
@@ -163,7 +164,25 @@ async function commitWithDate(
     git: git.API,
     ctx: vscode.ExtensionContext,
 ) {
-    const repo = git.getRepository(arg);
+    let repo: git.Repository | null | undefined = git.getRepository(arg);
+
+    if (!repo && git.repositories.length === 1) {
+        repo = git.repositories[0];
+    }
+
+    if (!repo && git.repositories.length > 1) {
+        repo = (
+            await vscode.window.showQuickPick(
+                git.repositories.map((repo) => ({
+                    repo,
+                    label: path.basename(repo.rootUri.fsPath),
+                })),
+                {
+                    placeHolder: 'Choose a repository',
+                },
+            )
+        )?.repo;
+    }
 
     if (!repo) {
         vscode.window.showErrorMessage('Could not find git repository.');
@@ -174,7 +193,7 @@ async function commitWithDate(
         {
             location: vscode.ProgressLocation.SourceControl,
         },
-        () => performCommitWithDate(repo, ctx),
+        () => performCommitWithDate(repo!, ctx),
     );
 }
 

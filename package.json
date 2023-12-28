@@ -46,7 +46,7 @@
             "commandPalette": [
                 {
                     "command": "commitWithDate.commitWithDate",
-                    "when": "false"
+                    "when": "config.git.enabled && !git.missing && gitOpenRepositoryCount != 0"
                 }
             ],
             "git.commit": [
