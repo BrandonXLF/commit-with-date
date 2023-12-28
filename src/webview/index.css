@@ -28,13 +28,13 @@ input[type='checkbox'] {
     gap: 6px;
 }
 
-commit-date-input {
+git-date-input {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-commit-date-input > div {
+git-date-input > div {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -42,7 +42,7 @@ commit-date-input > div {
     row-gap: 0.5rem;
 }
 
-commit-date-input .preset-btn {
+git-date-input .preset-btn {
     border: none;
     background: none;
     text-decoration: underline;

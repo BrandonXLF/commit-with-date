@@ -1,4 +1,4 @@
-import CommitDateInput, { Preset } from './commit-date-input';
+import CommitDateInput, { Preset } from './git-date-input';
 import TimezoneInput from './timezone-input';
 import {
     StartMessage,
@@ -7,7 +7,7 @@ import {
 } from '../types/messages';
 
 customElements.define('timezone-input', TimezoneInput);
-customElements.define('commit-date-input', CommitDateInput);
+customElements.define('git-date-input', CommitDateInput);
 
 const vscode = acquireVsCodeApi();
 const contentTemplate = document.getElementById(

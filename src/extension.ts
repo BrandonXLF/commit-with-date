@@ -107,8 +107,8 @@ async function performCommitWithDate(
 							<span>Amend</span>
 						</label>
 					</div>
-					<commit-date-input id="author" label="Author Date"></commit-date-input>
-                    <commit-date-input id="commit" label="Commit Date"></commit-date-input>
+					<git-date-input id="author" label="Author Date"></git-date-input>
+                    <git-date-input id="commit" label="Commit Date"></git-date-input>
 					<div id="rebase-warning">
 						WARNING: The commit date will be updated for all subsequent commits
                         unless <code>--committer-date-is-author-date</code> is used.
