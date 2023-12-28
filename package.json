@@ -1,0 +1,86 @@
+{
+    "name": "commit-with-date",
+    "displayName": "Commit with Date",
+    "description": "Create and amend Git commits with manually set commit and author dates.",
+    "publisher": "brandonfowler",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/BrandonXLF/commit-with-date"
+    },
+    "homepage": "https://github.com/BrandonXLF/commit-with-date",
+    "bugs": {
+        "url": "https://github.com/BrandonXLF/commit-with-date/issues"
+    },
+    "icon": "media/icon.png",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "SCM Providers",
+        "Other"
+    ],
+    "extensionKind": [
+        "workspace"
+    ],
+    "extensionDependencies": [
+        "vscode.git"
+    ],
+    "activationEvents": [],
+    "main": "./dist/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "category": "Commit with Date",
+                "command": "commitWithDate.commitWithDate",
+                "title": "Commit with Date",
+                "enablement": "!operationInProgress",
+                "icon": {
+                    "light": "media/light/icon.svg",
+                    "dark": "media/dark/icon.svg"
+                }
+            }
+        ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "commitWithDate.commitWithDate",
+                    "when": "false"
+                }
+            ],
+            "git.commit": [
+                {
+                    "command": "commitWithDate.commitWithDate"
+                }
+            ],
+            "scm/title": [
+                {
+                    "when": "scmProvider == git",
+                    "command": "commitWithDate.commitWithDate",
+                    "group": "navigation"
+                }
+            ]
+        }
+    },
+    "scripts": {
+        "compile": "webpack --mode production",
+        "lint": "eslint src --ext ts && prettier --write --tab-width 4 --single-quote .",
+        "vscode:prepublish": "npm run compile",
+        "watch": "webpack --watch --mode development"
+    },
+    "devDependencies": {
+        "@types/node": "14.14.9",
+        "@types/vscode": "1.60.0",
+        "@types/vscode-webview": "1.57.4",
+        "@typescript-eslint/eslint-plugin": "^6.16.0",
+        "@typescript-eslint/parser": "^6.16.0",
+        "copy-webpack-plugin": "^11.0.0",
+        "eslint": "^8.56.0",
+        "prettier": "^3.1.1",
+        "ts-loader": "^9.5.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.3.3",
+        "webpack-cli": "^5.1.4"
+    }
+}

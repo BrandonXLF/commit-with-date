@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES2019",
+        "outDir": "out",
+        "lib": ["DOM", "ES2019"],
+        "sourceMap": false,
+        "rootDir": ".",
+        "strict": true,
+        "esModuleInterop": true
+    },
+    "exclude": ["node_modules", "webpack.config.ts"]
+}
