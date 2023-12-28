@@ -135,6 +135,10 @@ async function performCommitWithDate(
 					</div>
 					<git-date-input id="author" label="Author Date"></git-date-input>
                     <git-date-input id="commit" label="Commit Date"></git-date-input>
+					<div id="rebase-warning">
+						NOTE: Commit date will be updated for all modified commits, even those
+                        that are not manually edited.
+					</div>
 					<div>
 						<button id="submit">Commit</button>
 					</div>

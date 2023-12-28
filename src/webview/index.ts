@@ -73,6 +73,7 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
             ? data.rebaseHeadDates.author
             : defaultCommitDate;
         submitButton.textContent = 'Continue';
+        document.getElementById('rebase-warning')!.style.display = 'block';
     }
 
     const presets = getPresets(data, false);
