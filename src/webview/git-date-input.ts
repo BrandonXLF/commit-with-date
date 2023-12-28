@@ -41,11 +41,7 @@ export default class CommitDateInput extends HTMLElement {
     private alternativeInput?: CommitDateInput;
     private alternativeCheck?: HTMLInputElement;
 
-    private wasChanged = false;
-    private defaultValue = CommitDateInput.globalDefault;
-
     private subInputChanged = () => {
-        this.wasChanged = true;
         this.dispatchEvent(new Event('change'));
     };
 
@@ -64,7 +60,7 @@ export default class CommitDateInput extends HTMLElement {
         ) as TimezoneInput;
         this.timezoneInput.addEventListener('change', this.subInputChanged);
 
-        this.value = this.defaultValue;
+        this.value = CommitDateInput.globalDefault;
 
         this.inputRow = document.createElement('div');
         this.inputRow.append(this.dateInput, this.timezoneInput);
@@ -138,7 +134,6 @@ export default class CommitDateInput extends HTMLElement {
         this.alternativeCheck.checked = true;
 
         this.alternativeCheck.addEventListener('change', () => {
-            this.wasChanged = true;
             this.syncAlternative();
         });
 
@@ -158,12 +153,8 @@ export default class CommitDateInput extends HTMLElement {
         this.alternativeCnt.replaceChildren(labelEl);
     }
 
-    set default(str: string | undefined) {
-        this.defaultValue = str ?? CommitDateInput.globalDefault;
-
-        if (!this.wasChanged) {
-            this.value = this.defaultValue;
-        }
+    set initialValue(str: string | undefined) {
+        this.value = str ?? CommitDateInput.globalDefault;
 
         if (this.alternativeInput) {
             this.alternativeCheck!.checked =
