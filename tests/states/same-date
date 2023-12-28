@@ -1,0 +1,8 @@
+GIT: init -b main
+FILE: foo = bar
+GIT: add foo
+SET: GIT_AUTHOR_DATE = 2023-01-01 01:00:00 +00:00
+SET: GIT_COMMITTER_DATE = 2023-01-01 01:00:00 +00:00
+GIT: commit -m "commit"
+FILE: foo = grape
+GIT: add foo

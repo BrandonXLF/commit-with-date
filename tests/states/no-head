@@ -1,0 +1,3 @@
+GIT: init -b main
+FILE: foo = bar
+GIT: add foo

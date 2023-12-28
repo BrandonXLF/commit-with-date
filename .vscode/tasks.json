@@ -2,6 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Build and Watch",
             "type": "npm",
             "script": "watch",
             "problemMatcher": "$ts-checker-webpack-watch",
@@ -13,6 +14,16 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Create Test Repo",
+            "type": "shell",
+            "command": "node \"${workspaceFolder}/tests/create-test-repo.mjs\"",
+            "isBackground": false
+        },
+        {
+            "label": "Prepare State Test",
+            "dependsOn": ["Build and Watch", "Create Test Repo"]
         }
     ]
 }

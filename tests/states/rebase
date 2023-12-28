@@ -1,0 +1,16 @@
+GIT: init -b main
+FILE: foo = bar
+GIT: add foo
+GIT: commit -m "common commit"
+GIT: checkout -b alt
+FILE: foo = mango
+SET: GIT_AUTHOR_DATE = 2023-01-01 01:00:00 +00:00
+SET: GIT_COMMITTER_DATE = 2023-01-01 02:00:00 +00:00
+GIT: commit -a -m "alt commit"
+UNSET: GIT_AUTHOR_DATE
+UNSET: GIT_COMMITTER_DATE
+GIT: checkout main
+FILE: foo = apple
+GIT: commit -a -m "main commit"
+GIT: checkout alt
+GIT: rebase main
