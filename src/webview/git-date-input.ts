@@ -161,7 +161,7 @@ export default class CommitDateInput extends HTMLElement {
         if (this.alternativeForcedReason) {
             labelEl.append(
                 `Using ${this.alternativeInput.label} since `,
-                this.alternativeForcedReason
+                this.alternativeForcedReason,
             );
         } else {
             labelEl.append(
