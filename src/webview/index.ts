@@ -39,6 +39,8 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
             authorDate: authorDateInput.value,
             commitDate: commitDateInput.value,
             amend: amendCheck.checked,
+            rebaseAmend: data.isRebase && data.rebaseAmend,
+            editAuthorScript: data.isRebase,
         } as EndMessage);
     });
 
@@ -61,15 +63,12 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     }
 
     if (data.isRebase) {
-        const defaultCommitDate = data.rebaseHasChanges
-            ? undefined
-            : data.rebaseHeadDates.commit;
         authorDateInput.forcedValue = data.rebaseADisNow
-            ? defaultCommitDate
+            ? undefined
             : data.rebaseHeadDates.author;
         commitDateInput.forcedValue = data.rebaseCDisAD
             ? data.rebaseHeadDates.author
-            : defaultCommitDate;
+            : undefined;
         submitButton.textContent = 'Continue';
         document.getElementById('rebase-warning')!.style.display = 'block';
     }

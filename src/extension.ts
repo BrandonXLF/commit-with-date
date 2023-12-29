@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as git from './types/git';
 import { exec } from 'child_process';
 import * as fs from 'fs';
-import { StartMessage, WebviewMessage } from './types/messages';
+import { EndMessage, StartMessage, WebviewMessage } from './types/messages';
 import path from 'path';
 
 function execRepoCmd(repo: git.Repository, cmd: string) {
@@ -74,12 +74,47 @@ async function getStartMessage(repo: git.Repository) {
         rebaseRebaseHeadIsHead: isRebase
             ? repo.state.HEAD.commit === repo.state.rebaseCommit.hash
             : undefined,
-        rebaseHasChanges: isRebase
-            ? !!repo.state.indexChanges.length
-            : undefined,
+        rebaseAmend: isRebase ? await getRMFlag(repo, 'amend') : undefined,
         isMerge,
         mergeHeadDates: isMerge ? mergeDates : undefined,
     } as StartMessage;
+}
+
+async function updateAuthorDate(
+    repo: git.Repository,
+    data: EndMessage,
+    authorDate: string,
+) {
+    if (data.amend || data.rebaseAmend)
+        await execRepoCmd(
+            repo,
+            `git commit -o --no-edit --amend --date="${authorDate}"`,
+        );
+
+    if (data.editAuthorScript) {
+        try {
+            const authorScriptURI = vscode.Uri.joinPath(
+                repo.rootUri,
+                '.git',
+                'rebase-merge',
+                'author-script',
+            );
+
+            const oldScript = await fs.promises.readFile(
+                authorScriptURI.fsPath,
+                'utf-8',
+            );
+
+            const newScript = oldScript.replace(
+                /^GIT_AUTHOR_DATE.+/m,
+                "GIT_AUTHOR_DATE='" + authorDate + "'",
+            );
+
+            await fs.promises.writeFile(authorScriptURI.fsPath, newScript);
+        } catch {
+            // Pass
+        }
+    }
 }
 
 async function performCommitWithDate(
@@ -149,20 +184,14 @@ async function performCommitWithDate(
 		</html>
 	`;
 
-    let amend = false;
-
-    await new Promise<void>((resolve, reject) => {
+    let data = await new Promise<EndMessage>((resolve, reject) => {
         panel.webview.onDidReceiveMessage(async (msg: WebviewMessage) => {
             if (msg.type === 'start-request') {
                 panel.webview.postMessage(await getStartMessage(repo));
                 return;
             }
 
-            process.env.GIT_AUTHOR_DATE = msg.authorDate;
-            process.env.GIT_COMMITTER_DATE = msg.commitDate;
-            amend = msg.amend;
-
-            resolve();
+            resolve(msg);
         });
 
         panel.onDidDispose(() => reject());
@@ -170,14 +199,13 @@ async function performCommitWithDate(
 
     panel.dispose();
 
-    if (amend)
-        await execRepoCmd(
-            repo,
-            `git commit -o --no-edit --amend --date="${process.env.GIT_AUTHOR_DATE}"`,
-        );
+    process.env.GIT_AUTHOR_DATE = data.authorDate;
+    process.env.GIT_COMMITTER_DATE = data.commitDate;
+
+    await updateAuthorDate(repo, data, data.authorDate);
 
     await vscode.commands.executeCommand(
-        amend ? 'git.commitAmend' : 'git.commit',
+        data.amend ? 'git.commitAmend' : 'git.commit',
         repo,
     );
 

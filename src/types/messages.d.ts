@@ -19,7 +19,7 @@ type IsRebase = {
     rebaseADisNow: boolean;
     rebaseCDisAD: boolean;
     rebaseRebaseHeadIsHead: boolean;
-    rebaseHasChanges: boolean;
+    rebaseAmend: boolean;
 };
 
 type IsNotRebase = {
@@ -28,7 +28,7 @@ type IsNotRebase = {
     rebaseADisNow: undefined;
     rebaseCDisAD: undefined;
     rebaseRebaseHeadIsHead: undefined;
-    rebaseHasChanges: undefined;
+    rebaseAmend: undefined;
 };
 
 type IsMerge = {
@@ -50,6 +50,8 @@ export type EndMessage = {
     authorDate: string;
     commitDate: string;
     amend: boolean;
+    rebaseAmend: boolean;
+    editAuthorScript: boolean;
 };
 
 export type StartRequestMessage = {
