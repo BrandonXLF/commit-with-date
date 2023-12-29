@@ -12,7 +12,7 @@ Provides the ability to set the author date, the committer date, or both. Also a
 
 ### Default values
 
-Uses the same default dates as git uses for standard commits, amending, rebasing, and merging.
+Much effort has been made to use the same default dates as git uses for standard commits, amending, rebasing, and merging.
 
 ### Preset dates
 
