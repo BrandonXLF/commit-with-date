@@ -91,10 +91,13 @@ export default class CommitDateInput extends HTMLElement {
     }
 
     syncAlternative() {
-        this.dateInput.disabled = this.alternativeCheck!.checked;
+        const disabled = this.alternativeCheck!.checked;
+
+        this.dateInput.disabled = disabled;
+        this.timezoneInput.disabled = disabled;
 
         this.presetRow?.querySelectorAll('button').forEach((btn) => {
-            btn.disabled = this.alternativeCheck!.checked;
+            btn.disabled = disabled;
         });
 
         if (this.alternativeCheck!.checked) {

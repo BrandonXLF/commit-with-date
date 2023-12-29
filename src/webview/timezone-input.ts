@@ -70,4 +70,10 @@ export default class TimezoneInput extends HTMLElement {
         this.hourInput.value = hourStr;
         this.minuteInput.value = minStr;
     }
+
+    set disabled(disabled: boolean) {
+        this.signInput.disabled = disabled;
+        this.hourInput.disabled = disabled;
+        this.minuteInput.disabled = disabled;
+    }
 }
