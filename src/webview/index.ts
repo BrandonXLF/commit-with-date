@@ -47,10 +47,8 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
 
         let amend = amendCheck.checked;
 
-        authorDateInput.initialValue = amend
-            ? data.headDates.author
-            : undefined;
-        commitDateInput.initialValue = undefined;
+        authorDateInput.forcedValue = amend ? data.headDates.author : undefined;
+        commitDateInput.forcedValue = undefined;
         submitButton.textContent = amend ? 'Amend' : 'Commit';
 
         const presets = getPresets(data, amendCheck.checked);
@@ -66,10 +64,10 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
         const defaultCommitDate = data.rebaseHasChanges
             ? undefined
             : data.rebaseHeadDates.commit;
-        authorDateInput.initialValue = data.rebaseADisNow
+        authorDateInput.forcedValue = data.rebaseADisNow
             ? defaultCommitDate
             : data.rebaseHeadDates.author;
-        commitDateInput.initialValue = data.rebaseCDisAD
+        commitDateInput.forcedValue = data.rebaseCDisAD
             ? data.rebaseHeadDates.author
             : defaultCommitDate;
         submitButton.textContent = 'Continue';

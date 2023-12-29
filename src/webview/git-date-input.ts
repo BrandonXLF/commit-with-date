@@ -153,7 +153,7 @@ export default class CommitDateInput extends HTMLElement {
         this.alternativeCnt.replaceChildren(labelEl);
     }
 
-    set initialValue(str: string | undefined) {
+    set forcedValue(str: string | undefined) {
         this.value = str ?? CommitDateInput.globalDefault;
 
         if (this.alternativeInput) {
