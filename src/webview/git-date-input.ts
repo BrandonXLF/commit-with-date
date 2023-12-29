@@ -40,6 +40,7 @@ export default class CommitDateInput extends HTMLElement {
 
     private alternativeInput?: CommitDateInput;
     private alternativeCheck?: HTMLInputElement;
+    private alternativeForcedReason?: HTMLElement;
 
     private subInputChanged = () => {
         this.dispatchEvent(new Event('change'));
@@ -125,6 +126,14 @@ export default class CommitDateInput extends HTMLElement {
         this.labelEl.textContent = label;
     }
 
+    set alternativeForced(reason: HTMLElement | undefined) {
+        if (this.alternativeInput) {
+            throw new Error('Must be set before "alternative is set.');
+        }
+
+        this.alternativeForcedReason = reason;
+    }
+
     set alternative(alternative: CommitDateInput) {
         if (this.alternativeInput) {
             throw new Error('"alternative" can only be set once.');
@@ -136,9 +145,9 @@ export default class CommitDateInput extends HTMLElement {
         this.alternativeCheck.type = 'checkbox';
         this.alternativeCheck.checked = true;
 
-        this.alternativeCheck.addEventListener('change', () => {
-            this.syncAlternative();
-        });
+        this.alternativeCheck.addEventListener('change', () =>
+            this.syncAlternative(),
+        );
 
         this.alternativeInput.addEventListener('change', () =>
             this.syncAlternative(),
@@ -148,10 +157,18 @@ export default class CommitDateInput extends HTMLElement {
 
         const labelEl = document.createElement('label');
         labelEl.className = 'checkbox-label';
-        labelEl.append(
-            this.alternativeCheck,
-            `Use ${this.alternativeInput.label}`,
-        );
+
+        if (this.alternativeForcedReason) {
+            labelEl.append(
+                `Using ${this.alternativeInput.label} since `,
+                this.alternativeForcedReason
+            );
+        } else {
+            labelEl.append(
+                this.alternativeCheck,
+                `Use ${this.alternativeInput.label}`,
+            );
+        }
 
         this.alternativeCnt.replaceChildren(labelEl);
     }
@@ -159,7 +176,7 @@ export default class CommitDateInput extends HTMLElement {
     set forcedValue(str: string | undefined) {
         this.value = str ?? CommitDateInput.globalDefault;
 
-        if (this.alternativeInput) {
+        if (this.alternativeInput && !this.alternativeForcedReason) {
             this.alternativeCheck!.checked =
                 this.value === this.alternativeInput.value;
             this.syncAlternative();

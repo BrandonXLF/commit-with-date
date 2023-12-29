@@ -1,4 +1,4 @@
-import CommitDateInput from './git-date-input';
+import GitDateInput from './git-date-input';
 import TimezoneInput from './timezone-input';
 import {
     StartMessage,
@@ -8,7 +8,7 @@ import {
 import getPresets from './presets';
 
 customElements.define('timezone-input', TimezoneInput);
-customElements.define('git-date-input', CommitDateInput);
+customElements.define('git-date-input', GitDateInput);
 
 const vscode = acquireVsCodeApi();
 const contentTemplate = document.getElementById(
@@ -17,8 +17,8 @@ const contentTemplate = document.getElementById(
 
 let amendCheck: HTMLInputElement;
 let submitButton: HTMLButtonElement;
-let authorDateInput: CommitDateInput;
-let commitDateInput: CommitDateInput;
+let authorDateInput: GitDateInput;
+let commitDateInput: GitDateInput;
 let data: StartMessage;
 
 window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
@@ -31,6 +31,29 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     submitButton = document.getElementById('submit') as HTMLButtonElement;
     authorDateInput = document.getElementById('author') as GitDateInput;
     commitDateInput = document.getElementById('commit') as GitDateInput;
+
+    if (data.isRebase && data.rebaseADisNow) {
+        const reasonSpan = document.createElement('span');
+        reasonSpan.innerHTML = '<code>--ignore-date</code> is being used.';
+        authorDateInput.alternativeForced = reasonSpan;
+
+        const nowDateInput = document.createElement(
+            'git-date-input',
+        ) as GitDateInput;
+        nowDateInput.label = 'Commit Time';
+        authorDateInput.alternative = nowDateInput;
+
+        setInterval(() => {
+            nowDateInput.forcedValue = GitDateInput.now();
+        }, 500);
+    }
+
+    if (data.isRebase && data.rebaseCDisAD) {
+        const reasonSpan = document.createElement('span');
+        reasonSpan.innerHTML =
+            '<code>--committer-date-is-author-date</code> is being used.';
+        commitDateInput.alternativeForced = reasonSpan;
+    }
 
     commitDateInput.alternative = authorDateInput;
 
