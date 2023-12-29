@@ -29,8 +29,8 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
 
     amendCheck = document.getElementById('amend') as HTMLInputElement;
     submitButton = document.getElementById('submit') as HTMLButtonElement;
-    authorDateInput = document.getElementById('author') as CommitDateInput;
-    commitDateInput = document.getElementById('commit') as CommitDateInput;
+    authorDateInput = document.getElementById('author') as GitDateInput;
+    commitDateInput = document.getElementById('commit') as GitDateInput;
 
     commitDateInput.alternative = authorDateInput;
 
