@@ -161,25 +161,22 @@ async function performCommitWithDate(
 				<link rel="stylesheet" type="text/css" href="${styleURI}" />
 			</head>
 			<body>
-				<template id="content">
-					<h1>Commit with Date</h1>
-					<div>
-						<label class="checkbox-label">
-							<input type="checkbox" id="amend">
-							<span>Amend</span>
-						</label>
-					</div>
-					<git-date-input id="author" label="Author Date"></git-date-input>
-                    <git-date-input id="commit" label="Commit Date"></git-date-input>
-					<div id="rebase-warning">
-						NOTE: Commit date will be updated for all modified commits, even those
-                        that are not manually edited.
-					</div>
-					<div>
-						<button id="submit">Commit</button>
-					</div>
-				</template>
-				<div id="loading">Loading...</div>
+				<h1>Commit with Date</h1>
+				<div>
+					<label class="checkbox-label">
+						<input type="checkbox" id="amend" disabled>
+						<span>Amend</span>
+					</label>
+				</div>
+				<git-date-input id="author" label="Author Date" disabled></git-date-input>
+				<git-date-input id="commit" label="Commit Date" disabled></git-date-input>
+				<div id="rebase-warning">
+					NOTE: Commit date will be updated for all modified commits, even those
+					that are not manually edited.
+				</div>
+				<div>
+					<button id="submit" disabled>Loading...</button>
+				</div>
 				<script type="module" src="${scriptURI}"></script>
 			</body>
 		</html>

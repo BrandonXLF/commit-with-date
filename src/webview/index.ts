@@ -11,26 +11,14 @@ customElements.define('timezone-input', TimezoneInput);
 customElements.define('git-date-input', GitDateInput);
 
 const vscode = acquireVsCodeApi();
-const contentTemplate = document.getElementById(
-    'content',
-) as HTMLTemplateElement;
 
-let amendCheck: HTMLInputElement;
-let submitButton: HTMLButtonElement;
-let authorDateInput: GitDateInput;
-let commitDateInput: GitDateInput;
-let data: StartMessage;
+let amendCheck = document.getElementById('amend') as HTMLInputElement;
+let submitButton = document.getElementById('submit') as HTMLButtonElement;
+let authorDateInput = document.getElementById('author') as GitDateInput;
+let commitDateInput = document.getElementById('commit') as GitDateInput;
 
 window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
-    data = e.data;
-
-    document.getElementById('loading')!.remove();
-    document.body.append(contentTemplate.content);
-
-    amendCheck = document.getElementById('amend') as HTMLInputElement;
-    submitButton = document.getElementById('submit') as HTMLButtonElement;
-    authorDateInput = document.getElementById('author') as GitDateInput;
-    commitDateInput = document.getElementById('commit') as GitDateInput;
+    let data = e.data;
 
     if (data.isRebase && data.rebaseADisNow) {
         const reasonSpan = document.createElement('span');
@@ -99,6 +87,13 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     const presets = getPresets(data, false);
     authorDateInput.presets = presets;
     commitDateInput.presets = presets;
+
+    submitButton.textContent = 'Commit';
+    
+    amendCheck.disabled = false;
+    submitButton.disabled = false;
+    authorDateInput.disabled = false;
+    commitDateInput.disabled = false;
 });
 
 vscode.postMessage({

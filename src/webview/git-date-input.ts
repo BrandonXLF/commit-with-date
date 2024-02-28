@@ -82,9 +82,13 @@ export default class CommitDateInput extends HTMLElement {
         this.innerHTML = '';
     }
 
-    attributeChangedCallback(name: string, _: string, newValue: string) {
-        if (name === 'label') {
-            this.label = newValue;
+    attributeChangedCallback(name: string, _: string, newValue: string | null) {
+        switch (name) {
+            case 'label':
+                this.label = newValue ?? '';
+                break;
+            case 'disabled':
+                this.disabled = newValue !== null;
         }
     }
 
@@ -121,6 +125,14 @@ export default class CommitDateInput extends HTMLElement {
 
     set label(label: string) {
         this.labelEl.textContent = label;
+    }
+
+    /**
+     * Should only be used before {@link alternative} is set
+     */
+    set disabled(disabled: boolean) {
+        this.dateInput.disabled = disabled;
+        this.timezoneInput.disabled = disabled;
     }
 
     set alternativeForced(reason: HTMLElement | undefined) {
