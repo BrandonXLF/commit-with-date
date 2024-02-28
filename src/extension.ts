@@ -127,6 +127,7 @@ async function performCommitWithDate(
         vscode.ViewColumn.Active,
         {
             enableScripts: true,
+            retainContextWhenHidden: true,
         },
     );
 
