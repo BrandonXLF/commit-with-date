@@ -82,5 +82,8 @@
         "ts-node": "^10.9.2",
         "typescript": "^5.3.3",
         "webpack-cli": "^5.1.4"
+    },
+    "dependencies": {
+        "@vscode/webview-ui-toolkit": "^1.4.0"
     }
 }

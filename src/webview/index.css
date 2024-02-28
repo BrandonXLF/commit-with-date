@@ -62,11 +62,3 @@ timezone-input input[type='number'] {
 #rebase-warning {
     display: none;
 }
-
-#submit {
-    background-color: var(--vscode-button-background);
-    color: var(--vscode-button-foreground);
-    border: 1px solid var(--vscode-button-border, transparent);
-    padding: 4px 2em;
-    border-radius: 2px;
-}

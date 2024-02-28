@@ -6,6 +6,7 @@ import {
     StartRequestMessage,
 } from '../types/messages';
 import getPresets from './presets';
+import { provideVSCodeDesignSystem, vsCodeButton } from '@vscode/webview-ui-toolkit';
 
 customElements.define('timezone-input', TimezoneInput);
 customElements.define('git-date-input', GitDateInput);
@@ -16,6 +17,8 @@ let amendCheck = document.getElementById('amend') as HTMLInputElement;
 let submitButton = document.getElementById('submit') as HTMLButtonElement;
 let authorDateInput = document.getElementById('author') as GitDateInput;
 let commitDateInput = document.getElementById('commit') as GitDateInput;
+
+provideVSCodeDesignSystem().register(vsCodeButton());
 
 window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     let data = e.data;

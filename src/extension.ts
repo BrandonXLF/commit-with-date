@@ -175,7 +175,7 @@ async function performCommitWithDate(
 					that are not manually edited.
 				</div>
 				<div>
-					<button id="submit" disabled>Loading...</button>
+					<vscode-button id="submit" disabled>Loading...</vscode-button>
 				</div>
 				<script type="module" src="${scriptURI}"></script>
 			</body>
