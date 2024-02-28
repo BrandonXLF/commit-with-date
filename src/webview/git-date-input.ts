@@ -7,6 +7,7 @@ export interface Preset {
 }
 
 export default class CommitDateInput extends HTMLElement {
+    static observedAttributes = ['label', 'disabled'];
     static globalDefault = CommitDateInput.now();
 
     static now() {
@@ -24,10 +25,6 @@ export default class CommitDateInput extends HTMLElement {
         return `${date.toISOString().slice(0, 19)}${
             offset > 0 ? '-' : '+'
         }${hours}:${minutes}`;
-    }
-
-    static get observedAttributes() {
-        return ['label'];
     }
 
     private readonly aboveRow: HTMLDivElement;
