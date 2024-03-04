@@ -6,7 +6,10 @@ import {
     StartRequestMessage,
 } from '../types/messages';
 import getPresets from './presets';
-import { provideVSCodeDesignSystem, vsCodeButton } from '@vscode/webview-ui-toolkit';
+import {
+    provideVSCodeDesignSystem,
+    vsCodeButton,
+} from '@vscode/webview-ui-toolkit';
 
 customElements.define('timezone-input', TimezoneInput);
 customElements.define('git-date-input', GitDateInput);
@@ -92,7 +95,7 @@ window.addEventListener('message', (e: MessageEvent<StartMessage>) => {
     commitDateInput.presets = presets;
 
     submitButton.textContent = 'Commit';
-    
+
     amendCheck.disabled = false;
     submitButton.disabled = false;
     authorDateInput.disabled = false;
